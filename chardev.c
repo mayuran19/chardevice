@@ -43,12 +43,19 @@ ssize_t onebyte_read(struct file *filep, char *buf, size_t count, loff_t *f_pos)
 	printk(KERN_ALERT "reading data from device\n");
 	int error_count = 0;
 	error_count = copy_to_user(buf, onebyte_data, 1);
-	return 1;
+	return 0;
 }
 
 ssize_t onebyte_write(struct file *filep, const char *buf, size_t count, loff_t *f_pos)
 {
-	
+	printk(KERN_ALERT "reading data from device\n");
+	int size = strlen(buf);
+	if(size > 1){
+		printk("write error: No space left on device\n");
+		return -ENOMEM;
+	}else{
+		onebyte_data = buf;	
+	}
 }
 
 static int onebyte_init(void)
