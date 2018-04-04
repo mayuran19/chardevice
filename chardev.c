@@ -59,14 +59,11 @@ ssize_t onebyte_write(struct file *filep, const char *buf, size_t count, loff_t 
 		return -ENOMEM;
 	}else{
 		printk(KERN_ALERT "writing data to device successfully\n");
-		char *msg_from_user;
-		msg_from_user = kmalloc(sizeof(char), GFP_KERNEL);
-		copy_from_user(msg_from_user, buf, sizeof(char));
-		printk(KERN_ALERT "writing data value 1 %c \n", msg_from_user[0]);
-		onebyte_data = msg_from_user[0];
-		printk(KERN_ALERT "writing data value 2 %s \n", msg_from_user[0]);
+		copy_from_user(onebyte_data, buf, sizeof(char));
+		printk(KERN_ALERT "writing data value 2 %c \n", onebyte_data);
 		size = 1;	
 	}
+	return count;
 }
 
 static int onebyte_init(void)
