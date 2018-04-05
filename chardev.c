@@ -41,10 +41,8 @@ int onebyte_release(struct inode *inode, struct file *filep)
 
 ssize_t onebyte_read(struct file *filep, char *buf, size_t count, loff_t *f_pos)
 {
-	printk(KERN_ALERT "reading data from device\n");
 	int error_count = 0;
 	error_count = copy_to_user(buf, onebyte_data, 1);
-	printk(KERN_ALERT "reading data from device size: %i", size);
 	int tmp = size;
 	size = 0;
 	return tmp;
@@ -52,18 +50,15 @@ ssize_t onebyte_read(struct file *filep, char *buf, size_t count, loff_t *f_pos)
 
 ssize_t onebyte_write(struct file *filep, const char *buf, size_t count, loff_t *f_pos)
 {
-	printk(KERN_ALERT "writing data to device\n");
-	printk(KERN_ALERT "writing data size in param %i \n", count);
+	
+	//copy_from_user(onebyte_data, buf, sizeof(char));
+	*onebyte_data = buf[0];
+	size = 1;
 	if(count > 1){
-		printk("write error: No space left on device\n");
-		return -ENOMEM;
+		return -ENOSPC;
 	}else{
-		printk(KERN_ALERT "writing data to device successfully\n");
-		copy_from_user(onebyte_data, buf, sizeof(char));
-		printk(KERN_ALERT "writing data value 2 %c \n", onebyte_data);
-		size = 1;	
+		return 1;
 	}
-	return count;
 }
 
 static int onebyte_init(void)
